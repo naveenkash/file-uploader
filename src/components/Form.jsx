@@ -67,8 +67,9 @@ export class Form extends Component {
           headers: { Authorization: `Token ${data.token}` },
         });
         const userdata = await userResp.json();
-        localStorage.setItem("user", JSON.stringify({ ...userdata, ...data }));
-        this.props.updateUser(userdata);
+        const user = { user: { ...userdata }, ...data };
+        localStorage.setItem("user", JSON.stringify(user));
+        this.props.updateUser(user);
       } else {
         localStorage.setItem("user", JSON.stringify(data));
         this.props.updateUser(data);
