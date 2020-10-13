@@ -41,7 +41,11 @@ export class Form extends Component {
         username: this.username.current.value,
         password: this.password.current.value,
       };
-      const resp = await fetch("https://interview.skizzle.email/register/", {
+      let url = "https://interview.skizzle.email/login/";
+      if (this.props.signupForm) {
+        url = "https://interview.skizzle.email/register/";
+      }
+      const resp = await fetch(url, {
         method: "POSt",
         body: JSON.stringify(formData),
         headers: {
@@ -51,17 +55,26 @@ export class Form extends Component {
       });
 
       const data = await resp.json();
-      this.setState({
-        loading: false,
-      });
       if (resp.status >= 400) {
+        this.setState({
+          loading: false,
+        });
         alert("Error occured");
         return;
       }
-      localStorage.setItem("user", JSON.stringify(data));
-      this.props.isLoggedIn(true);
-      this.props.updateUser(data);
+      if (!this.props.signupForm && data.token) {
+        const userResp = await fetch("https://interview.skizzle.email/me/", {
+          headers: { Authorization: `Token ${data.token}` },
+        });
+        const userdata = await userResp.json();
+        localStorage.setItem("user", JSON.stringify({ ...userdata, ...data }));
+        this.props.updateUser(userdata);
+      } else {
+        localStorage.setItem("user", JSON.stringify(data));
+        this.props.updateUser(data);
+      }
 
+      this.props.isLoggedIn(true);
       this.props.history.push("/home");
     } catch (error) {
       alert(error);
