@@ -2,7 +2,8 @@ import React, { Component, createRef } from "react";
 import { Link } from "react-router-dom";
 import "../styles/Navbar.css";
 import { withRouter } from "react-router-dom";
-
+import { connect } from "react-redux";
+import { logout } from "../actions/User";
 export class Navbar extends Component {
   constructor(props) {
     super(props);
@@ -20,7 +21,7 @@ export class Navbar extends Component {
         <div className="container">
           <div className="desktop_menu">
             <ul className="navbar_items">
-              <NavItems />
+              <NavItems {...this.props} />
             </ul>
           </div>
           <div className="mobile_menu_container">
@@ -31,7 +32,7 @@ export class Navbar extends Component {
             </div>
             <div className="mobile_menu" ref={this.mobileMenu}>
               <ul>
-                <NavItems />
+                <NavItems {...this.props} />
               </ul>
             </div>
           </div>
@@ -41,31 +42,45 @@ export class Navbar extends Component {
   }
 }
 
-function NavItems() {
-  function logout() {
-    alert("logout");
-  }
+function NavItems(props) {
   return (
     <>
-      <li className="navbar_item">
-        <Link to="/">Home</Link>
-      </li>
-      <li className="navbar_item">
-        <Link to="/login">Login</Link>
-      </li>
-      <li className="navbar_item">
-        <Link to="/signup">Signup</Link>
-      </li>
-      <li
-        className="navbar_item"
-        onClick={() => {
-          logout();
-        }}
-      >
-        Log Out
-      </li>
+      {props.auth ? (
+        <>
+          <li className="navbar_item">
+            <Link to="/">Home</Link>
+          </li>
+          <li
+            className="navbar_item"
+            onClick={() => {
+              logoutUser(props);
+            }}
+          >
+            Log Out
+          </li>
+        </>
+      ) : null}
+      {!props.auth ? (
+        <>
+          <li className="navbar_item">
+            <Link to="/login">Login</Link>
+          </li>
+          <li className="navbar_item">
+            <Link to="/signup">Signup</Link>
+          </li>
+        </>
+      ) : null}
     </>
   );
 }
 
-export default withRouter(Navbar);
+function logoutUser(props) {
+  localStorage.removeItem("user");
+  props.logout();
+  alert("logout");
+  props.history.push("/signup");
+}
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
+export default withRouter(connect(mapStateToProps, { logout })(Navbar));

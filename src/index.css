@@ -10,6 +10,7 @@ body {
   --cold: #a3d8f4;
   --box-shadow: rgba(204, 204, 204, 0.75);
   --text: black;
+  --light-text: white;
   --background: white;
 }
 
@@ -28,21 +29,14 @@ body {
 /* loading bar */
 .lds-ring {
   display: inline-block;
-  position: relative;
-  width: 80px;
-  height: 80px;
 }
 .lds-ring div {
   box-sizing: border-box;
   display: block;
   position: absolute;
-  width: 64px;
-  height: 64px;
-  margin: 8px;
-  border: 8px solid rgb(0, 0, 0);
   border-radius: 50%;
   animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-  border-color: rgb(0, 0, 0) transparent transparent transparent;
+  border-color: var(--purple) transparent transparent transparent;
 }
 .lds-ring div:nth-child(1) {
   animation-delay: -0.45s;
@@ -61,6 +55,28 @@ body {
     transform: rotate(360deg);
   }
 }
+.page_loader_parent {
+  width: 64px;
+  height: 64px;
+}
+.page_loader {
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border: 8px solid var(--purple);
+}
+.button_loader_parent {
+  width: 20px;
+  height: 20px;
+}
+.button_loader {
+  width: 16px;
+  height: 16px;
+  margin: 2px;
+  border: 2px solid var(--purple);
+}
+/* loading bar css end */
+
 @media only screen and (max-width: 1275px) {
   .container {
     max-width: 1080px;

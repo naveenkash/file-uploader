@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-
+import Form from "../components/Form";
 export class Signup extends Component {
   render() {
-    return <div className="navbar_bottom_margin">Signup</div>;
+    return <Form signupForm={true} />;
   }
 }
 

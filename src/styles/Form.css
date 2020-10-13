@@ -1,0 +1,39 @@
+.form_wrapper {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+}
+.form {
+  width: 350px;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+}
+.form input {
+  width: 100%;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  outline: none;
+  border: 1px solid var(--text);
+  border-radius: 5px;
+  font-size: 17px;
+  box-sizing: border-box;
+}
+.form .submit_form {
+  width: 150px;
+  padding: 8px;
+  border: 1px solid var(--text);
+  outline: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: var(--neon);
+  position: relative;
+  min-height: 30px;
+}
+
+@media only screen and (max-width: 375px) {
+  .form {
+    width: 100%;
+    padding: 0 10px;
+  }
+}
