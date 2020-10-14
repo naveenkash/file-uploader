@@ -1,0 +1,19 @@
+.navigate_wrapper {
+  padding: 15px 0 0 0;
+}
+.navigate_container {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.navigate {
+  padding: 4px 12px;
+  background-color: #eee;
+  margin-right: 8px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.navigate:hover {
+  background-color: rgb(212, 212, 212);
+}

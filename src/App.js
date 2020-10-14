@@ -10,6 +10,10 @@ import { isLoggedIn } from "./actions/Auth";
 import { updateUser } from "./actions/User";
 import { connect } from "react-redux";
 import PageLoader from "./components/PageLoader";
+import OpenFolder from "./pages/OpenFolder";
+import { updateFiles } from "./actions/File";
+import Navigate from "./components/Navigate";
+import { updateNavigationHistory } from "./actions/Navigate";
 export class App extends Component {
   constructor(props) {
     super(props);
@@ -18,17 +22,36 @@ export class App extends Component {
     };
   }
   componentDidMount() {
-    let user = localStorage.getItem("user");
+    let user = JSON.parse(localStorage.getItem("user"));
+    if (user && Date.parse(user.expiry) > Date.now()) {
+      this.props.isLoggedIn(true);
+      this.props.updateUser(user);
+      let url = `https://interview.skizzle.email/file-folder/`;
+      fetch(url, {
+        headers: {
+          Authorization: `Token ${user.token}`,
+          accept: "application/json",
+          "content-type": "application/json",
+        },
+      })
+        .then((resp) => resp.json())
+        .then((data) => {
+          this.props.updateFiles(data);
+          this.props.history.push("/home");
+          let temp = [{ path: "/home", name: "Home" }];
+          this.props.updateNavigationHistory(temp);
+        })
+        .catch((e) => {
+          alert(e.message);
+          this.props.history.push("/signup");
+        });
+    } else {
+      localStorage.removeItem("user");
+      this.props.history.push("/signup");
+    }
     this.setState({
       loading: false,
     });
-    if (user) {
-      this.props.isLoggedIn(true);
-      this.props.updateUser(JSON.parse(user));
-      this.props.history.push("/home");
-    } else {
-      this.props.history.push("/signup");
-    }
   }
   render() {
     if (this.state.loading) {
@@ -37,6 +60,7 @@ export class App extends Component {
     return (
       <div className="app">
         <Navbar />
+        {this.props.auth ? <Navigate /> : null}
         <Switch>
           <Route path="/login">
             <Login />
@@ -44,8 +68,11 @@ export class App extends Component {
           <Route path="/signup">
             <Signup />
           </Route>
-          <Route path="/home">
+          <Route exact path="/home">
             <Home />
+          </Route>
+          <Route path="/home/folders/:id">
+            <OpenFolder />
           </Route>
           <Route>
             <Redirect to="/home" />
@@ -61,5 +88,10 @@ const mapStateToProps = (state) => ({
 });
 
 export default withRouter(
-  connect(mapStateToProps, { isLoggedIn, updateUser })(App)
+  connect(mapStateToProps, {
+    isLoggedIn,
+    updateUser,
+    updateFiles,
+    updateNavigationHistory,
+  })(App)
 );
