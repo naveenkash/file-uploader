@@ -22,7 +22,7 @@ export class OpenFolder extends Component {
     if (id) {
       let folders = [];
       if (this.props.files && this.props.files.results) {
-        this.props.files.results.map((folder) => {
+        this.props.files.results.forEach((folder) => {
           if (folder.parent_folder === id) {
             folders.push(folder);
           }
