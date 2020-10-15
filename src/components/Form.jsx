@@ -3,6 +3,7 @@ import "../styles/Form.css";
 import { withRouter } from "react-router-dom";
 import { isLoggedIn } from "../actions/Auth";
 import { updateUser } from "../actions/User";
+import { updateNavigationHistory } from "../actions/Navigate";
 import { connect } from "react-redux";
 import ButtonLoader from "./ButtonLoader";
 export class Form extends Component {
@@ -76,6 +77,8 @@ export class Form extends Component {
       }
 
       this.props.isLoggedIn(true);
+      let temp = [{ path: "/home", name: "Home" }];
+      this.props.updateNavigationHistory(temp);
       this.props.history.push("/home");
     } catch (error) {
       alert(error);
@@ -129,4 +132,6 @@ export class Form extends Component {
   }
 }
 
-export default withRouter(connect(null, { isLoggedIn, updateUser })(Form));
+export default withRouter(
+  connect(null, { isLoggedIn, updateUser, updateNavigationHistory })(Form)
+);
